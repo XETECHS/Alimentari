@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="sale_currency_tree">
+            <field name="name">sale.inherit.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_total']" position="after">
+                    <field name="amount_gtq" invisible="0" optional="hide" string="Total GTQ" sum='Total' widget="monetary" options="{'currency_field': 'company.currency_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_currency_tree_quotation">
+            <field name="name">sale.inherit.tree.quotation</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_total']" position="after">
+                    <field name="amount_gtq" invisible="0" optional="hide" string="Total GTQ" sum='Total' widget="monetary" options="{'currency_field': 'company.currency_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_currency_form_sale_order">
+            <field name="name">sale.currency.form.sale.order</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='pricelist_id']" position="after">
+                    <field name="amount_gtq" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
