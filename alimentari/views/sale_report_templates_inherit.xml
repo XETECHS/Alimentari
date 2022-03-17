@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_saleorder_inherit" inherit_id="sale.report_saleorder_document">
-        <xpath expr="//table[@class='table table-sm o_main_table']//thead//tr" position="replace">
+        <xpath expr="//table[hasclass('table','table-sm','o_main_table')]//thead//tr" position="replace">
             <tr style="background-color:lightgray;">
                 <th name="th_description" class="text-left">Description</th>
                 <th name="th_quantity" class="text-right">Quantity</th>
@@ -16,9 +16,9 @@
             </tr>
         </xpath>
 
-        <xpath expr="//tbody[@class='sale_tbody']//tr//td[5]" position="replace"></xpath>
+        <xpath expr="//tbody[hasclass('sale_tbody')]//tr//td[5]" position="replace"></xpath>
 
-        <xpath expr="//div[@class='clearfix']" position="replace">
+        <xpath expr="//div[hasclass('clearfix')]" position="replace">
             <div id="total" class="row" name="total">
                 <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
                     <table class="table table-sm">

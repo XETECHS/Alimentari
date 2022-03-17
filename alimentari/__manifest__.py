@@ -10,7 +10,7 @@
     """,
 
     'author': "Xetechs",
-    'website': "http://www.yourcompany.com",
+    'website': "https://xetechs.com/",
     'license': "LGPL-3",
 
     # Categories can be used to filter modules in modules listing
