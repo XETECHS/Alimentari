@@ -12,9 +12,7 @@ from odoo.tools.misc import formatLang
 import odoo.addons.decimal_precision as dp
 
 
-class AccountMove(models.Model):
-    _inherit = "account.move"
+class PurchaseOrder(models.Model):
+    _inherit = "purchase.order"
 
-    order_compra = fields.Char('Orden de Compra', size=25, readonly=True, states={'draft': [('readonly', False)]},)
-
-
+    container=fields.Char('Contenedor', size=65, readonly=True, states={'draft': [('readonly', False)]})
