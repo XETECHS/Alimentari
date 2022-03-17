@@ -20,15 +20,18 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','stock','account'],
+    'depends': ['base','stock','account','sale'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         # 'views/views.xml',
         # 'views/templates.xml',
+        'views/sale_report_templates_inherit.xml',
         'views/product_template_view.xml',
         'views/account_move_view.xml',
+
+        
 
         
     ],
