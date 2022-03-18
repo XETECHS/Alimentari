@@ -28,10 +28,10 @@
         # 'views/views.xml',
         # 'views/templates.xml',
         'views/sale_report_templates_inherit.xml',
+        'views/report_invoice_inherit.xml',
         'views/product_template_view_inherit.xml',
         'views/account_move_view_inherit.xml',
-        'views/purchase_order_view_inherit.xml',
-
+        'views/purchase_order_view_inherit.xml',      
         
 
         
