@@ -14,7 +14,7 @@ import odoo.addons.decimal_precision as dp
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
-    container=fields.Char('Contenedor',related='purchase_id.container',readonly=True)
+    container=fields.Char(string='Contenedor',related='purchase_id.container',readonly=True)
     # date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")
 
 
