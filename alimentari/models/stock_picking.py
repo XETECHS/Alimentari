@@ -15,9 +15,9 @@ import odoo.addons.decimal_precision as dp
 class StockPicking(models.Model):
     _inherit = "stock.picking"
     container=fields.Char('Contenedor',related='purchase_id.container',readonly=True)
+    # date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")
 
 
-    # container = fields.Many2one('purchase.order', string='Contenedor', related='order_id.container', readonly=True, states={'draft': [('readonly', False)]})
 
     # def _action_done(self):
     #     """Call `_action_done` on the `stock.move` of the `stock.picking` in `self`.

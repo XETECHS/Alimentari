@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
         <record id="purchase_order_form_view_inherit" model="ir.ui.view">
@@ -6,11 +7,11 @@
             <field name="inherit_id" ref="purchase.purchase_order_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='currency_id']" position="after">
-                    <field name="container" />
+                    <field name="etd" />
                     <field name="eta" />
                 </xpath>
                 <xpath expr="//field[@name='effective_date']" position="after">
-                    <field name="etd" />
+                    <field name="container" />
                 </xpath>
             </field>
         </record>
