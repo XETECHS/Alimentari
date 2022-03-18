@@ -31,9 +31,8 @@
         'views/report_invoice_inherit.xml',
         'views/product_template_view_inherit.xml',
         'views/account_move_view_inherit.xml',
-        'views/purchase_order_view_inherit.xml',      
-        
-
+        'views/purchase_order_view_inherit.xml',    
+        'views/stock_picking_view_inherit.xml',  
         
     ],
     # only loaded in demonstration mode

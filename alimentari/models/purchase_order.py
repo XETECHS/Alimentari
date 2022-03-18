@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from email.policy import default
 from itertools import groupby
 from datetime import datetime, timedelta
 
@@ -16,3 +17,5 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     container=fields.Char('Contenedor', size=65, readonly=True, states={'draft': [('readonly', False)]})
+    eta = fields.Date('ETA',  readonly=True, states={'draft': [('readonly', False)]}, default=fields.Datetime.now)
+    etd = fields.Date('ETD',  readonly=True, states={'draft': [('readonly', False)]}, default=fields.Datetime.now)

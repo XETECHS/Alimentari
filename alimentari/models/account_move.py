@@ -16,5 +16,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     order_compra = fields.Char('Orden de Compra', size=25, readonly=True, states={'draft': [('readonly', False)]},)
+    container=fields.Char('Contenedor',related='purchase_id.container',readonly=True)
+
 
 

@@ -7,6 +7,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='currency_id']" position="after">
                     <field name="container" />
+                    <field name="eta" />
+                </xpath>
+                <xpath expr="//field[@name='effective_date']" position="after">
+                    <field name="etd" />
                 </xpath>
             </field>
         </record>
