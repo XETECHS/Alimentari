@@ -17,6 +17,7 @@
         'views/account_journal_views.xml',
         'views/res_users_views.xml',
         'report/invoice_fel_template.xml',
+        'report/alimentari_invoice_fel_template.xml',        
         'report/action_report.xml',
         #'views/account_tax_views.xml',
     ]
