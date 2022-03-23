@@ -16,7 +16,7 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     unit_to_box = fields.Float('Cajas', compute='_compute_boxes',store=True)
-    complemento = fields.Float('Complemento', compute='_compute_boxes',store=True)
+    complemento = fields.Float('Unidades', compute='_compute_boxes',store=True)
 
     @api.depends('qty_available')
     def _compute_boxes(self):

@@ -60,7 +60,6 @@
                                     <tr>
                                         <td>
                                             <span t-field="doc.company_id.name" />
-                                            .
                                         </td>
                                     </tr>
                                     <tr>
@@ -73,7 +72,6 @@
                                             <span t-field="doc.company_id.street" />
                                             ,
                                             <span t-field="doc.company_id.street2" />
-                                            ,
                                             <span t-field="doc.company_id.city" />
                                             ,
                                             <span t-field="doc.company_id.country_id.name" />
@@ -214,7 +212,22 @@
                                         <span>Dirección: </span>
                                     </div>
                                     <div class="col-10">
-                                        <span t-field="doc.partner_id.street" />
+
+
+                                        <t t-if="not doc.company_id.street and not doc.company_id.street2">
+                                            <td>
+                                                <span>CIUDAD</span>
+                                            </td>
+                                        </t>
+                                        <t t-else="else">
+                                            <td>
+                                                <span t-field="doc.partner_id.street" />
+                                                <t t-if="doc.partner_id.street2">
+                                                    <span>, </span>
+                                                    <span t-field="doc.partner_id.street2" />
+                                                </t>
+                                            </td>
+                                        </t>
                                     </div>
 
                                 </div>
