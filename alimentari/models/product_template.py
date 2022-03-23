@@ -21,17 +21,22 @@ class ProductTemplate(models.Model):
     @api.depends('qty_available')
     def _compute_boxes(self):
         for product in self:
-            unidades=product.uom_po_id.factor_inv
+            unidades=product.uom_po_id.factor_inv if product.uom_id.uom_type =="bigger" else product.uom_po_id.factor
             a_mano= product.qty_available
             residuo=a_mano%unidades
-            if residuo ==0:
-                product.unit_to_box=a_mano/unidades
-                product.complemento=0
-                # print("Cajas: ",a_mano/unidades, " residuo: ",0)
+            if product.uom_id.uom_type =="bigger":
+                if residuo ==0:
+                    product.unit_to_box=a_mano/unidades
+                    product.complemento=0
+                    # print("Cajas: ",a_mano/unidades, " residuo: ",0)
+                else:
+                    product.unit_to_box=a_mano//unidades
+                    product.complemento=residuo
+                    # print("Cajas: ",a_mano//unidades, " residuo: ",residuo)
             else:
-                product.unit_to_box=a_mano//unidades
-                product.complemento=residuo
-                # print("Cajas: ",a_mano//unidades, " residuo: ",residuo)
+                product.unit_to_box=0
+                product.complemento=0
+
 
 
     
