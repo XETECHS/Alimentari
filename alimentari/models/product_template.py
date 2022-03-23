@@ -24,7 +24,8 @@ class ProductTemplate(models.Model):
             unidades=product.uom_po_id.factor_inv if product.uom_id.uom_type =="bigger" else product.uom_po_id.factor
             a_mano= product.qty_available
             residuo=a_mano%unidades
-            if product.uom_id.uom_type =="bigger":
+            print("uom_type",product.uom_id.uom_type,product.uom_po_id.uom_type)
+            if product.uom_po_id.uom_type =="bigger":
                 if residuo ==0:
                     product.unit_to_box=a_mano/unidades
                     product.complemento=0
