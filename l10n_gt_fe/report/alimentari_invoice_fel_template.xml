@@ -30,7 +30,6 @@
                         border-collapse: collapse;
                         border: #a01f23 1px solid;
                     }
-            
                     thead {
                         background-color: #a01f23;
                         color: #fff;
@@ -153,45 +152,34 @@
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="doc">
                     <t t-call="l10n_gt_fe.fel_layout">
-                        <div t-attf-class="page">
+                        <div class="page">
                             <style>
-                            .border-color{
-                                border: #a01f23 1px solid;
-                            }
-                            .brd-top{
-                                border-top: #fff 0px solid;
-                            }
-                            .tbl-detail{
-                                width: 100%;
-                                height: 100%;
-                                border: #a01f23 1px solid;
-                            }
-
-                            .tbl-detail th{
-                                padding: 8px 8px 8px 8px;
-                                font-weight: lighter;
-                            }
-
-                            .tbl-detail td{
-                                border-left: #a01f23 1px solid;
-                                border-right: #a01f23 1px solid;
-                            }
-                            
-                            .tbl-detail thead{
-                                background-color: #a01f23;
-                                color: #fff;
-                            }
-
-                            .page{
-                                width: 100%;
-                            }
-
-                            .detail{
-                                height: 100%;
-                            }
-
-                        </style>
-
+                                .border-color{
+                                    border: #a01f23 1px solid;
+                                }
+                                .brd-top{
+                                    border-top: #fff 0px solid;
+                                }
+                                .tbl-detail{
+                                    width: 100%;
+                                }
+    
+                                .tbl-detail th{
+                                    padding: 8px 8px 8px 8px;
+                                    font-weight: lighter;
+                                }
+    
+                                .tbl-detail td{
+                                    border-left: #a01f23 1px solid;
+                                    border-right: #a01f23 1px solid;
+                                }
+                                
+                                .tbl-detail thead{
+                                    background-color: #a01f23;
+                                    color: #fff;
+                                }
+    
+                            </style>
                             <div class="container mt-2" style="font-size: 12.5px;">
                                 <div class="row p-1 border-color">
                                     <div class="col-2">
@@ -233,10 +221,11 @@
                                 </div>
                             </div>
 
-                            <div class="container detail mt-4 p-0" style="font-size: 12.5px;">
+
+                            <div class="container mt-4 p-0" style="font-size: 12.5px;">
                                 <div class="row">
                                     <div class="col-12">
-                                        <table class="tbl-detail" style="height: 100vh;">
+                                        <table class="tbl-detail">
                                             <thead class="text-center">
                                                 <tr>
                                                     <th style="width:10%">Código</th>
@@ -267,8 +256,6 @@
                                                         </td>
                                                         <td class="text-right">
                                                             <span t-field="line.price_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}' />
-
-                                                            <!-- <span t-esc="'{:,.2f}'.format(line.price_total)" /> -->
                                                         </td>
                                                     </tr>
                                                 </t>
@@ -341,7 +328,7 @@
                                                         <tr>
                                                             <td style="width:10%"></td>
                                                             <td style="width:45%">
-                                                                <span t-field="frase.name" />
+                                                                <span t-esc="str(frase.name).upper()" />
                                                             </td>
                                                             <td style="width:10%"></td>
                                                             <td style="width:10%"></td>
