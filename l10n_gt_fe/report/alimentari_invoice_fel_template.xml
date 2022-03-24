@@ -263,10 +263,12 @@
                                                             <span t-field="line.product_id.uom_id.name" />
                                                         </td>
                                                         <td class="text-right">
-                                                            <span t-field="line.product_id.list_price" />
+                                                            <span t-field="line.product_id.list_price" t-options='{"widget": "monetary", "display_currency": doc.currency_id}' />
                                                         </td>
                                                         <td class="text-right">
-                                                            <span t-esc="'{:,.2f}'.format(line.price_total)" />
+                                                            <span t-field="line.price_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}' />
+
+                                                            <!-- <span t-esc="'{:,.2f}'.format(line.price_total)" /> -->
                                                         </td>
                                                     </tr>
                                                 </t>
