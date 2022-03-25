@@ -18,8 +18,16 @@
                 </t>
             </t>
 
-            <div class="header">
+            <div class="header header-relativo">
                 <style>
+
+                    .header-relativo {
+                        position: relative !important;
+                        
+                      }
+                      
+                    .container {background-color: transparent !important;}
+                      
                     .dte {
                         float: right;
                         border-color: #a01f23;
@@ -43,8 +51,37 @@
                     .dte th, .dte td {
                         padding: 5px 5px 5px 10px;
                     }
+
+                    .separador-reporte {
+                        position: absolute !important;
+
+                        background-color: transparent;
+                        z-index: 1100 !important;
+                        height: 700px;
+                        top: 285px;
+                      }
+
+                    .separador-reporte td{
+                        border-left: #a01f23 1px solid;
+                        border-right: #a01f23 1px solid;
+                    }
                     
                 </style>
+
+                <table class="separador-reporte" style="width:100%">
+                    <tbody>
+                        <tr>
+                            <td style="width:10%"></td>
+                            <td style="width:45%"></td>
+                            <td style="width:10%"></td>
+                            <td style="width:10%"></td>
+                            <td style="width:10%"></td>
+                            <td style="width:15%"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
                 <div class="container p-0" style="font-size: 12.5px;">
                     <div class="row mt-4">
                         <div class="col-6 float-left">
@@ -53,7 +90,8 @@
                                 <body>
                                     <tr>
                                         <td>
-                                            <img src="/l10n_gt_fe/static/src/img/logo_alimentari.png" style="width:210px;" />
+                                            <!-- <img src="/l10n_gt_fe/static/src/img/logo_alimentari.png" style="width:210px;" /> -->
+                                            <img src='/web/binary/company_logo' style="width:100px"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -169,10 +207,6 @@
                                     font-weight: lighter;
                                 }
     
-                                .tbl-detail td{
-                                    border-left: #a01f23 1px solid;
-                                    border-right: #a01f23 1px solid;
-                                }
                                 
                                 .tbl-detail thead{
                                     background-color: #a01f23;
@@ -220,7 +254,6 @@
 
                                 </div>
                             </div>
-
 
                             <div class="container mt-4 p-0" style="font-size: 12.5px;">
                                 <div class="row">
