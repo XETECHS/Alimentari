@@ -89,14 +89,9 @@
 
                                 <body>
                                     <tr>
-                                        <td>
+                                        <td style="width:100%;">
                                             <!-- <img src="/l10n_gt_fe/static/src/img/logo_alimentari.png" style="width:210px;" /> -->
-                                            <img src='/web/binary/company_logo' style="width:100px"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span t-field="doc.company_id.name" />
+                                            <img src='/web/binary/company_logo' style="width:100%" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -119,7 +114,7 @@
                                             NIT:
                                             <span t-field="doc.company_id.vat" />
                                             Tel.:
-                                            <span t-field="doc.company_id.vat" />
+                                            <span t-field="doc.company_id.mobile" />
                                         </td>
                                     </tr>
                                 </body>
@@ -282,7 +277,7 @@
                                                             <span t-field="line.quantity" />
                                                         </td>
                                                         <td class="text-center">
-                                                            <span t-field="line.product_id.uom_id.name" />
+                                                            <span t-field="line.product_uom_id.name" />
                                                         </td>
                                                         <td class="text-right">
                                                             <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": doc.currency_id}' />
@@ -310,7 +305,7 @@
                                     }
                             
                                     .tbl-frase td {
-                                        padding: 8px 8px 8px 8px;
+                                        padding: 0px 8px 0px 8px;
                                         font-weight: lighter;
                                     }
                             
@@ -360,6 +355,48 @@
                                         <div class="col-12">
                                             <table class="tbl-frase text-center">
                                                 <tbody>
+
+                                                    <tr>
+                                                        <td style="width:10%"></td>
+                                                        <td style="width:45%;heigh:10px;font-size:11px;">
+                                                            <t t-if="doc.purchase_order_ext and doc.ref_container">
+                                                                <span>
+                                                                    <strong>O.C.</strong>
+                                                                </span>
+                                                                <span t-field="doc.purchase_order_ext" />
+                                                                <span>
+                                                                    <strong> CONT </strong>
+                                                                </span>
+                                                                <span t-field="doc.ref_container" />
+                                                            </t>
+                                                            <t t-else="else">
+                                                                <t t-if="doc.purchase_order_ext">
+                                                                    <span>
+                                                                        <strong>O.C. </strong>
+                                                                    </span>
+                                                                    <span t-field="doc.purchase_order_ext" />
+                                                                </t>
+                                                                <t t-if="doc.ref_container">
+                                                                    <span>
+                                                                        <strong>CNT. </strong>
+                                                                    </span>
+                                                                    <span t-field="doc.ref_container" />
+                                                                </t>
+                                                                <t t-else="else">
+                                                                    <span>
+                                                                        <strong style="color:#fff;">.</strong>
+                                                                    </span>
+                                                                </t>
+                                                            </t>
+
+
+                                                        </td>
+                                                        <td style="width:10%"></td>
+                                                        <td style="width:10%"></td>
+                                                        <td style="width:10%"></td>
+                                                        <td style="width:15%"></td>
+                                                    </tr>
+
                                                     <t t-foreach="doc.fe_phrase_ids" t-as="frase">
                                                         <tr>
                                                             <td style="width:10%"></td>
@@ -414,7 +451,9 @@
                                                             <span>Número de Autorización:  </span>
                                                             <span t-field="doc.fe_uuid" />
                                                         </td>
-                                                        <td rowspan="3" style="width:10%"><img t-if="doc.generate_qr()" t-att-src="'data:image/png;base64,%s' % to_text(doc.generate_qr())" class="qr" /></td>
+                                                        <td rowspan="3" style="width:10%">
+                                                            <img t-if="doc.generate_qr()" t-att-src="'data:image/png;base64,%s' % to_text(doc.generate_qr())" class="qr" />
+                                                        </td>
                                                         <td rowspan="3" style="width:15%">
                                                             <img src="/l10n_gt_fe/static/src/img/fel_icon.png" style="width:80%; height:auto;" />
                                                         </td>

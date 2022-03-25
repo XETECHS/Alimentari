@@ -13,7 +13,10 @@ import odoo.addons.decimal_precision as dp
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    order_compra = fields.Char(string='Orden de Compra', size=25, readonly=True, states={'draft': [('readonly', False)]},)
+    purchase_order_ext = fields.Char(string='Orden de Compra', size=25) #states={'draft': [('readonly', False)]},)
+    
+    ref_container = fields.Char(string='No. Contenedor', size=50)
+    
     container=fields.Char(string='Contenedor',related='purchase_id.container',readonly=True)
 
 
