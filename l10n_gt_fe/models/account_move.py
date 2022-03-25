@@ -22,6 +22,17 @@ try:
 except:
     raise UserError(_("run Command: 'pip install num2words'"))
 
+
+try:
+    import qrcode
+except ImportError:
+    qrcode = None
+try:
+    import base64
+except ImportError:
+    base64 = None
+from io import BytesIO
+
 TYPE_FE = [
     ('FACT', 'Factura'),
     ('FESP', 'Factura Especial'),
@@ -81,6 +92,8 @@ class AccountMove(models.Model):
     fe_pdf_file = fields.Binary(string='Download PDF', copy=False)
 
     rel_establishment_user = fields.Many2one('res.company.establishment', string='Establecimiento Usuario', related="invoice_user_id.fe_establishment_id")
+
+    #fe_url = fields.Char(string='Url FEL', help="URL FEL")
     
     @api.depends('partner_id')
     def get_partner_vat(self):
@@ -457,7 +470,9 @@ class AccountMove(models.Model):
                             'process_status': 'ok',
                             'fe_serie': data['serie'],
                             'fe_number': data['numero'],
-                            'fe_certification_date': certification_date.strftime('%Y-%m-%d %H:%M:%S')
+                            'fe_certification_date': certification_date.strftime('%Y-%m-%d %H:%M:%S'),
+
+                            #'fe_url': "https://report.feel.com.gt/ingfacereport/ingfacereport_documento?uuid="+data['uuid']
                         } )
         else:
             error_msg = ''
@@ -467,6 +482,28 @@ class AccountMove(models.Model):
                 error_msg += '%s. %s \n'%(count, error['mensaje_error'])
             self.write( {'fe_errors': error_msg,'process_status': 'fail'} )
         return 
+
+    def generate_qr(self):
+        if qrcode and base64:
+            if self.fe_uuid:
+                qr = qrcode.QRCode(
+                    version=1,
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,
+                    box_size=10,
+                    border=4,
+                )
+                qr.add_data("https://report.feel.com.gt/ingfacereport/ingfacereport_documento?uuid="+self.fe_uuid )
+                qr.make(fit=True)
+
+                img = qr.make_image()
+                temp = BytesIO()
+                img.save(temp, format="PNG")
+                qr_image = base64.b64encode(temp.getvalue())
+                return qr_image
+            else:
+                return False
+        else:
+            return False
         
 
     def cancel_dte(self):

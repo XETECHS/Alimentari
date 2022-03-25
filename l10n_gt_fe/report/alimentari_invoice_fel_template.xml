@@ -351,6 +351,9 @@
                                         border-left: #a01f23 1px solid;
                                         border-right: #a01f23 1px solid;
                                     }
+                                    .qr{
+                                        width: 80%;
+                                    }
                                 </style>
                                 <div class="container p-0" style="font-size: 12.5px;">
                                     <div class="row">
@@ -411,7 +414,7 @@
                                                             <span>Número de Autorización:  </span>
                                                             <span t-field="doc.fe_uuid" />
                                                         </td>
-                                                        <td rowspan="3" style="width:10%">QR</td>
+                                                        <td rowspan="3" style="width:10%"><img t-if="doc.generate_qr()" t-att-src="'data:image/png;base64,%s' % to_text(doc.generate_qr())" class="qr" /></td>
                                                         <td rowspan="3" style="width:15%">
                                                             <img src="/l10n_gt_fe/static/src/img/fel_icon.png" style="width:80%; height:auto;" />
                                                         </td>
