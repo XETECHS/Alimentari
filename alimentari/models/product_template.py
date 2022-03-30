@@ -59,11 +59,8 @@ class ProductTemplate(models.Model):
             for tax in product.taxes_id:
                 if tax.id not in impuestos:
                     if tax.id==bebidas_alcoholicas.id:
-                        print("if",tax.id,bebidas_alcoholicas.id)
                         impuestos.append(tax.id)
-                    elif tax.id==iva_por_pagar.id:
-                        impuestos.append(tax.id)
-                        print("elif",tax.id,iva_por_pagar.id)
+                        impuestos.append(iva_por_pagar.id)
 
             if impuestos==[]:
                 impuestos.append(iva_por_pagar.id)
@@ -77,6 +74,7 @@ class ProductTemplate(models.Model):
                 error+=1
                 if product.id not in con_movimiento:
                     con_movimiento.append(product.id)
+            print("producto: {} Impuestos: {}".format(product.name,impuestos))
         
         print("exitosos: ",exitosos," error: ",error)
         print("movimientos: ",con_movimiento)
