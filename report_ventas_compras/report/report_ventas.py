@@ -66,24 +66,41 @@ class ReportSaleBook(models.AbstractModel):
         lang_id = lang._lang_get(lang_code)
         date_format = lang_id.date_format
         total_iva = 0.00
+        total_bebidas = 0.00
+
+        #BIENES
         total_bienes_gravados = 0.00
         total_bienes_exentos = 0.00
         total_bienes_iva = 0.00
+        total_bienes_bebidas = 0.00
         total_bienes = 0.00
+        
+        #SERVICIOS
         total_serv_gravados = 0.00
         total_serv_exentos = 0.00
         total_serv_iva = 0.00
+        total_serv_bebidas = 0.00
+
+        #EXPORTACIONES
         total_expo_gravados = 0.00
         total_expo_exentos = 0.00
         total_expo_iva = 0.00
+        total_expo_bebidas = 0.00
+        
+        #NC
         total_nc_gravados = 0.00
         total_nc_exentos = 0.00
         total_nc_iva = 0.00
+        total_nc_bebidas = 0.00
         total_nc = 0.00
+        
+        #ND
         total_nd_gravados = 0.00
         total_nd_exentos = 0.00
         total_nd_iva = 0.00
+        total_nd_bebidas = 0.00
         total_nd = 0.00
+
         journal_ids = data['form']['journal_ids']
         date_from = data['form']['date_from']
         date_to = data['form']['date_to']
@@ -109,11 +126,19 @@ class ReportSaleBook(models.AbstractModel):
             servicio_expo_gravada = 0.00
             bien_expo_exenta = 0.00
             servicio_expo_exento = 0.00
+
             iva_bien_l = 0.00
             iva_servicio_l = 0.00
             iva_bien_expo = 0.00
             iva_servicio_expo = 0.00
             total_iva = 0.00
+
+            bebidas_bien_l = 0.00
+            bebidas_servicio_l = 0.00
+            bebidas_bien_expo = 0.00
+            bebidas_servicio_expo = 0.00
+            total_bebidas = 0.00
+            
             # amount_g = 0.00
             # amount_e = 0.00
             # amount_iva = 0.00
@@ -141,22 +166,35 @@ class ReportSaleBook(models.AbstractModel):
                     line.product_id, inv.partner_id)
                 aux_gravado = taxes['total_excluded']
                 aux_iva = 0.00
+                aux_bebidas = 0.00
                 if line.tax_ids:
                     for tax in taxes['taxes']:
-                        aux_iva += tax['amount']
+                        # aux_iva += tax['amount']
+                        if tax['id']!=self.env.ref('__export__.account_tax_3_0da8763b').id:
+                            print("IVA", tax['amount'])
+                            aux_iva += tax['amount']
+                        else:
+                            print("BEBIDAS", tax['amount'])
+                            aux_bebidas += tax['amount']
+
+
                 if line.tipo_gasto == "compra":
                     if line.tax_ids or type_nb == "True":
                         bien_local_gravado += aux_gravado
                         iva_bien_l += aux_iva
+                        bebidas_bien_l += aux_bebidas
                         if tipo == 'NC':
                             total_nc_gravados += aux_gravado
                             total_nc_iva += aux_iva
+                            total_nc_bebidas += aux_bebidas
                         elif tipo == 'ND':
                             total_nd_gravados += aux_gravado
                             total_nd_iva += aux_iva
+                            total_nd_bebidas += aux_bebidas
                         else:
                             total_bienes_gravados += aux_gravado
                             total_bienes_iva += aux_iva
+                            total_bienes_bebidas += aux_bebidas
                     else:
                         bien_local_exento += aux_gravado
                         if tipo == 'NC':
@@ -169,15 +207,19 @@ class ReportSaleBook(models.AbstractModel):
                     if line.tax_ids  or type_nb == "True":
                         servicio_local_gravado += aux_gravado
                         iva_servicio_l += aux_iva
+                        bebidas_servicio_l += aux_bebidas
                         if tipo == 'NC':
                             total_nc_gravados += aux_gravado
                             total_nc_iva += aux_iva
+                            total_nc_bebidas += aux_bebidas
                         elif tipo == 'ND':
                             total_nd_gravados += aux_gravado
                             total_nd_iva += aux_iva
+                            total_nd_bebidas += aux_bebidas
                         else:
                             total_serv_gravados += aux_gravado
                             total_serv_iva += aux_iva
+                            total_serv_bebidas += aux_bebidas
                     else:
                         servicio_local_exento += aux_gravado
                         if tipo == 'NC':
@@ -191,24 +233,29 @@ class ReportSaleBook(models.AbstractModel):
                         if line.tax_ids or type_nb == "True":
                             servicio_expo_gravada += aux_gravado
                             iva_servicio_expo += aux_iva
+                            bebidas_servicio_expo += aux_bebidas
                         else:
                             servicio_expo_exento += aux_gravado
                     else:
                         if line.tax_ids or type_nb == "True":
                             bien_expo_gravada += aux_gravado
                             iva_bien_expo += aux_iva
+                            bebidas_bien_expo += aux_bebidas
                         else:
                             bien_expo_exenta += aux_gravado
                     if line.tax_ids or type_nb == "True":
                         if tipo == 'NC':
                             total_nc_gravados += aux_gravado
                             total_nc_iva += aux_iva
+                            total_nc_bebidas += aux_bebidas
                         elif tipo == 'ND':
                             total_nd_gravados += aux_gravado
                             total_nd_iva += aux_iva
+                            total_nd_bebidas += aux_bebidas
                         else:
                             total_expo_gravados += aux_gravado
                             total_expo_iva += aux_iva
+                            total_expo_bebidas += aux_bebidas
                     else:
                         if tipo == 'NC':
                             total_nc_exentos += aux_gravado
@@ -219,11 +266,12 @@ class ReportSaleBook(models.AbstractModel):
 
             total_iva = sum([iva_bien_l, iva_servicio_l, iva_bien_expo,
                              iva_servicio_expo])
+            total_bebidas = sum([bebidas_bien_l,bebidas_servicio_l,bebidas_bien_expo,bebidas_servicio_expo])
             amount_total = sum([bien_local_gravado, servicio_local_gravado,
                                 bien_local_exento, servicio_local_exento,
                                 bien_expo_gravada, servicio_expo_gravada,
                                 bien_expo_exenta, servicio_expo_exento,
-                                total_iva])
+                                total_iva,total_bebidas])
             linea = {
                 'company': empresa.name.encode('ascii', 'ignore') or "",
                 'nit': empresa.vat or "",
@@ -248,50 +296,71 @@ class ReportSaleBook(models.AbstractModel):
                 'bienes_e_exentos': bien_expo_exenta,
                 'servicios_e_exentos': servicio_expo_exento,
                 'iva': total_iva,
+                'bebidas': total_bebidas,
                 'subtotal': amount_total,
             }
             result.append(linea)
+        #SUMATORIAS GENERALES (RESUMEN)
         total_bienes = sum([total_bienes_gravados, total_bienes_exentos,
-                            total_bienes_iva])
+                            total_bienes_iva,total_bienes_bebidas])
         total_servicios = sum([total_serv_gravados, total_serv_exentos,
-                               total_serv_iva])
-        total_nc = sum([total_nc_gravados, total_nc_exentos, total_nc_iva])
-        total_nd = sum([total_nd_gravados, total_nd_exentos, total_nd_iva])
+                               total_serv_iva,total_serv_bebidas])
+        total_nc = sum([total_nc_gravados, total_nc_exentos, total_nc_iva,total_nc_bebidas])
+        
+        total_nd = sum([total_nd_gravados, total_nd_exentos, total_nd_iva,total_nd_bebidas])
         total_gravado = sum([total_bienes_gravados, total_serv_gravados,
                              total_nc_gravados, total_nd_gravados,
                              total_expo_gravados])
         total_exento = sum([total_bienes_exentos, total_serv_exentos,
                             total_nc_exentos, total_nd_exentos,
                             total_expo_exentos])
-        total_imp = sum([total_bienes_iva, total_serv_iva, total_nc_iva,
-                         total_nd_iva, total_expo_iva])
+        total_imp = sum([total_bienes_iva, total_serv_iva, total_nc_iva,total_nd_iva, total_expo_iva,
+                         total_bienes_bebidas, total_serv_bebidas, total_nc_bebidas, total_nd_bebidas, total_expo_bebidas])
+
+        # 'total_gravado': total_gravado,
+        # 'total_exento': total_exento,
+        # 'total_iva': sum([total_bienes_iva, total_serv_iva, total_nc_iva, total_nd_iva, total_expo_iva]),
+        # 'total_bebidas': sum([total_bienes_bebidas, total_serv_bebidas, total_nc_bebidas, total_nd_bebidas, total_expo_bebidas]),
+        # 'total_total': sum([total_gravado, total_exento, total_imp])
+
+            
         linea = {
             'cliente': "**Ultima Linea**",
+            #BIENES
             'total_bienes_gravados': total_bienes_gravados,
             'total_bienes_exentos': total_bienes_exentos,
             'total_bienes_iva': total_bienes_iva,
+            'total_bienes_bebidas': total_bienes_bebidas,
             'total_bienes': total_bienes,
+            #SERVICIOS
             'total_servicios_gravados': total_serv_gravados,
             'total_servicios_exentos': total_serv_exentos,
             'total_servicios_iva': total_serv_iva,
+            'total_servicios_bebidas': total_serv_bebidas,
             'total_servicios': total_servicios,
+            #NC
             'total_nc_gravados': total_nc_gravados,
             'total_nc_exentos': total_nc_exentos,
             'total_nc_iva': total_nc_iva,
+            'total_nc_bebidas': total_nc_bebidas,
             'total_nc': total_nc,
+            #ND
             'total_nd_gravados': total_nd_gravados,
             'total_nd_exentos': total_nd_exentos,
             'total_nd_iva': total_nd_iva,
+            'total_nd_bebidas': total_nd_bebidas,
             'total_nd': total_nd,
+            #EXPORTACION
             'total_expo_gravados': total_expo_gravados,
             'total_expo_exentos': total_expo_exentos,
             'total_expo_iva': total_expo_iva,
-            'total_expor': sum([total_expo_gravados, total_expo_exentos,
-                                total_expo_iva]),
+            'total_expo_bebidas': total_expo_bebidas,
+            'total_expor': sum([total_expo_gravados, total_expo_exentos, total_expo_iva,total_expo_bebidas]),
+            #TOTALES
             'total_gravado': total_gravado,
             'total_exento': total_exento,
-            'total_iva': sum([total_bienes_iva, total_serv_iva,
-                              total_nc_iva, total_nd_iva, total_expo_iva]),
+            'total_iva': sum([total_bienes_iva, total_serv_iva, total_nc_iva, total_nd_iva, total_expo_iva]),
+            'total_bebidas': sum([total_bienes_bebidas, total_serv_bebidas, total_nc_bebidas, total_nd_bebidas, total_expo_bebidas]),
             'total_total': sum([total_gravado, total_exento, total_imp])
         }
         results = []
