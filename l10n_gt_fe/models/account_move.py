@@ -162,8 +162,7 @@ class AccountMove(models.Model):
         if self.fe_type == 'FCAM':
             ET.SubElement(Adenda, 'auto-generated_for_wildcard')
         elif self.fe_type == 'NABN':
-            ET.SubElement(Adenda,
-                          'tipopago').text = self.reversed_entry_id.invoice_payment_term_id.name.upper() if self.reversed_entry_id.invoice_payment_term_id else 'CONTADO'
+            ET.SubElement(Adenda, 'tipopago').text = self.reversed_entry_id.invoice_payment_term_id.name.upper() if self.reversed_entry_id.invoice_payment_term_id else 'CONTADO'
             ET.SubElement(Adenda, 'factura_referencia').text = self.reversed_entry_id.name
             ET.SubElement(Adenda, 'cliente').text = self.partner_id.vat.replace("-", "")
         DatosEmision = ET.SubElement(DTE, 'dte:DatosEmision', {'ID': "DatosEmision"})
@@ -210,8 +209,7 @@ class AccountMove(models.Model):
         ET.SubElement(DireccionReceptor, 'dte:CodigoPostal').text = self.company_id.zip or '1'
         ET.SubElement(DireccionReceptor, 'dte:Municipio').text = self.partner_id.city or ''
         ET.SubElement(DireccionReceptor, 'dte:Departamento').text = self.partner_id.state_id.name or ''
-        ET.SubElement(DireccionReceptor, 'dte:Pais').text = self.partner_id.country_id.code or self.env.ref(
-            'base.gt').code
+        ET.SubElement(DireccionReceptor, 'dte:Pais').text = self.partner_id.country_id.code or self.env.ref('base.gt').code
 
         if self.fe_phrase_ids:
             Frases = ET.SubElement(DatosEmision, 'dte:Frases')
@@ -220,21 +218,23 @@ class AccountMove(models.Model):
 
         Items = ET.SubElement(DatosEmision, 'dte:Items')
         count = 1
+        dte_total=0.00
         for line in self.invoice_line_ids:
-
-            Item = ET.SubElement(Items, 'dte:Item',
-                                 {'BienOServicio': 'B' if line.product_id.type in ('consu', 'product') else 'S',
-                                  'NumeroLinea': str(count)})
+            tax_line=[]
+            
+            Item = ET.SubElement(Items, 'dte:Item',{'BienOServicio': 'B' if line.product_id.type in ('consu', 'product') else 'S','NumeroLinea': str(count)})
             ET.SubElement(Item, 'dte:Cantidad').text = str(line.quantity)
-            ET.SubElement(Item, 'dte:UnidadMedida').text = line.product_uom_id.name.upper()[
-                                                           0:3] if line.product_uom_id else 'UND'
+            ET.SubElement(Item, 'dte:UnidadMedida').text = line.product_uom_id.name.upper()[0:3] if line.product_uom_id else 'UND'
             ET.SubElement(Item, 'dte:Descripcion').text = line.product_id.name
             ET.SubElement(Item, 'dte:PrecioUnitario').text = str(round(line.price_unit, 2))
             ET.SubElement(Item, 'dte:Precio').text = str(round(line.price_unit * line.quantity, 2))
             ET.SubElement(Item, 'dte:Descuento').text = str(round(line.price_discount, 2))
+            
             if self.fe_type not in ['NABN', 'FESP']:
+                print("if self.fe_type not in ['NABN', 'FESP']")
                 Impuestos = ET.SubElement(Item, 'dte:Impuestos')
                 for tax in line.tax_ids:
+                    
 
                     exento_iva = True
                     for tax in line.tax_ids:
@@ -243,22 +243,35 @@ class AccountMove(models.Model):
                             break
 
                     for tax in line.tax_ids:
-                        Impuesto = ET.SubElement(Impuestos, 'dte:Impuesto')
-                        ET.SubElement(Impuesto, 'dte:NombreCorto').text = tax.description
-                        if not origin_faex:
-                            if self.fe_type == 'FAEX':
-                                ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "2"  
-                            elif self.fe_type == 'FACT' and exento_iva:
-                                ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "2" 
-                            else:
-                                ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "1"  
-                        elif origin_faex:
-                            ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "2"
-    #                     ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_subtotal, 2) )
-                        # ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(self.amount_total - tax_amount_totals_final, 2) )
-                        ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_total - line.price_tax, 2) )
-                        ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str( round(line.price_tax, 2) )
-                        ET.SubElement(Item, 'dte:Total').text = str( round(line.price_total, 2) )
+                        if tax.id not in tax_line:
+                            tax_line.append(tax.id)
+                            Impuesto = ET.SubElement(Impuestos, 'dte:Impuesto')
+                            print("tax",tax)
+                            ET.SubElement(Impuesto, 'dte:NombreCorto').text = tax.description
+                            if not origin_faex:
+                                if self.fe_type == 'FAEX':
+                                    ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "2"  
+                                elif self.fe_type == 'FACT' and exento_iva:
+                                    ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "2" 
+                                else:
+                                    ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "1"  
+                            elif origin_faex:
+                                ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "2"
+        #                     ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_subtotal, 2) )
+                            # ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(self.amount_total - tax_amount_totals_final, 2) )
+
+                            if tax.tax_group_id.shortname =='BEBIDAS ALCOHOLICAS':
+                                print("Line", line.product_uom_id.factor)
+                                print("TAX_G", tax.tax_group_id.shortname)
+                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_unit, 2))
+                                ET.SubElement(Impuesto, 'dte:CantidadUnidadesGravables').text = str( round(line.quantity, 2))
+                                MontoImpuesto=(line.price_unit) * (tax.amount/100)
+                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text =  str( round(MontoImpuesto, 2) )
+                            elif tax.tax_group_id.shortname =='IVA':
+                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_total - line.price_tax, 2) )
+                                MontoImpuesto=(line.price_total - line.price_tax) * (tax.amount/100)
+                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str( round(MontoImpuesto, 2) )
+                            dte_total=round(line.price_total, 2)
 
             elif self.fe_type == 'FESP':
                 Impuestos = ET.SubElement(Item, 'dte:Impuestos')
@@ -283,11 +296,18 @@ class AccountMove(models.Model):
                         ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "2"
                     ET.SubElement(Impuesto, 'dte:MontoGravable').text = str(round(price_subtotal, 2))
                     ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str(round(price_tax, 2))
-                    ET.SubElement(Item, 'dte:Total').text = str(round(price_total, 2))
+                    # ET.SubElement(Item, 'dte:Total').text = str(round(price_total, 2))
+                    dte_total=round(line.price_total, 2)
             elif self.fe_type == 'NABN':
-                ET.SubElement(Item, 'dte:Total').text = str(round(line.price_total, 2))
+                #ET.SubElement(Item, 'dte:Total').text = str(round(line.price_total, 2))
+                dte_total=round(line.price_total, 2)
+
             count += 1
+        
+        #El total debe aparecer una sóla vez
+        ET.SubElement(Item, 'dte:Total').text = str(dte_total)
         Totales = ET.SubElement(DatosEmision, 'dte:Totales')
+        
         if self.fe_type != 'NABN':
             TotalImpuestos = ET.SubElement(Totales, 'dte:TotalImpuestos')
             dict_taxes = json.loads(self.tax_totals_json)
@@ -398,16 +418,13 @@ class AccountMove(models.Model):
                 ET.SubElement(Exportacion, "cex:DireccionConsignatarioODestinatario").text = '%s %s %s %s %s' % (
                 self.partner_id.street, self.partner_id.street2 or '', self.partner_id.city or '',
                 self.partner_id.state_id.name or '', self.partner_id.country_id.name)
-                ET.SubElement(Exportacion, "cex:CodigoConsignatarioODestinatario").text = self.partner_id.vat.replace(
-                    "-", "")
+                ET.SubElement(Exportacion, "cex:CodigoConsignatarioODestinatario").text = self.partner_id.vat.replace("-", "")
                 ET.SubElement(Exportacion, "cex:NombreComprador").text = self.partner_id.name.upper()
                 ET.SubElement(Exportacion, "cex:CodigoComprador").text = self.partner_id.vat.replace("-", "")
                 ET.SubElement(Exportacion, "cex:OtraReferencia").text = "EXPORTACION"
                 ET.SubElement(Exportacion, "cex:INCOTERM").text = "FOB"
-                ET.SubElement(Exportacion,
-                              "cex:NombreExportador").text = self.journal_id.fe_establishment_id.fe_tradename
-                ET.SubElement(Exportacion,
-                              "cex:CodigoExportador").text = self.journal_id.fe_establishment_id.export_code
+                ET.SubElement(Exportacion, "cex:NombreExportador").text = self.journal_id.fe_establishment_id.fe_tradename
+                ET.SubElement(Exportacion, "cex:CodigoExportador").text = self.journal_id.fe_establishment_id.export_code
 
         # ******************* ALTERNATIVA? ***************
         # rough_string = ET.tostring(fe, encoding='UTF-8', method='xml')
