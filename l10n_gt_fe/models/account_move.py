@@ -48,14 +48,26 @@ TYPE_FE = [
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    def get_num2words(self, amount):
-        words = num2words(amount, lang='es', to='currency') 
+    def get_num2words(self, amount, lang='es'):
+        words = num2words(amount, lang=lang, to='currency') 
         words = words.capitalize()
-        if 'céntimo' in words:
+        print("words",words)
+        if 'céntimo'  in words:
             words = words.replace("euros", "Quetzales")
             result = words.replace("céntimo", "centavo")
+            print("if",result)
+        elif 'centimos' in words:
+            words=words.replace("euro","Quetzal")
+            result=words.replace("centimos", "centavos")
+            print("elif",result)
+        elif 'cents' in words:
+            result = words.replace("euro", "dollars")
+            print("elif 2",result)
         else:
             result = words.replace("euros", " Quetzales Exactos")
+            print("else",result)
+
+        print("RESULT",result)
         return result
 
     def action_print_fel(self):
