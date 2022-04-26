@@ -90,35 +90,63 @@
                     </tbody>
                 </table>
 
-                <div class="complemento-factura">
-                    <table style="width:100%">
-                        <thead>
-                            <tr>
-                                <th colspan="2">COMPLEMENTO FACTURA</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>FECHA DE VENCIMIENTO:</td>
-                                <td>
-                                    <span t-field="doc.invoice_date_due" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>NÚMERO DE ABONOS:</td>
-                                <td>
-                                    <span t-field="doc.fe_count_payment" />
-                                </td>
-                            </tr>
 
-                            <tr>
-                                <td>MONTO DE ABONOS:</td>
-                                <td>
-                                    <span t-field="doc.amount_residual" />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="complemento-factura">
+                    <t t-if="doc.journal_id.fe_type == 'FCAM' ">
+                        <table style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">COMPLEMENTO FACTURA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FECHA DE VENCIMIENTO:</td>
+                                    <td>
+                                        <span t-field="doc.invoice_date_due" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>NÚMERO DE ABONOS:</td>
+                                    <td>
+                                        <span t-field="doc.fe_count_payment" />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>MONTO DE ABONOS:</td>
+                                    <td>
+                                        <span t-field="doc.amount_residual" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <t t-elif="doc.journal_id.fe_type == 'NCRE' ">
+                        <table style="width:100%">
+                            <tbody>
+                                <tr>
+                                    <td>Fecha emisión doc origen:</td>
+                                    <td>
+                                        <span t-field="doc.reversed_entry_id.fe_certification_date" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Número autorización doc origen:</td>
+                                    <td>
+                                        <span t-field="doc.reversed_entry_id.fe_uuid" />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Motivo ajuste:</td>
+                                    <td>
+                                        <span t-field="doc.ref" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
                 </div>
 
 
@@ -170,8 +198,8 @@
                                             <thead>
                                                 <tr>
                                                     <th colspan="2" class="dte-th text-center">
-                                                            <span style="text-transform: uppercase;" t-field="doc.journal_id.fe_type"/>
-                                                            <span> ELECTRÓNICA</span>
+                                                        <span style="text-transform: uppercase;" t-field="doc.journal_id.fe_type" />
+                                                        <span> ELECTRÓNICA</span>
                                                     </th>
                                                 </tr>
                                             </thead>
