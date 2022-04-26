@@ -61,6 +61,15 @@
                         top: 285px;
                       }
 
+                    .complemento-factura {
+                        font-size: 10.5px;
+                        position: absolute !important;
+                        margin-top: 21.5cm;
+                        margin-left:3cm;
+                        background-color: transparent;
+                        z-index: 1100 !important;
+                    }
+
                     .separador-reporte td{
                         border-left: #a01f23 1px solid;
                         border-right: #a01f23 1px solid;
@@ -81,6 +90,37 @@
                     </tbody>
                 </table>
 
+                <div class="complemento-factura">
+                    <table style="width:100%">
+                        <thead>
+                            <tr>
+                                <th colspan="2">COMPLEMENTO FACTURA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>FECHA DE VENCIMIENTO:</td>
+                                <td>
+                                    <span t-field="doc.invoice_date_due" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>NÚMERO DE ABONOS:</td>
+                                <td>
+                                    <span t-field="doc.fe_count_payment" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>MONTO DE ABONOS:</td>
+                                <td>
+                                    <span t-field="doc.amount_residual" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
 
                 <div class="container p-0" style="font-size: 12.5px;">
                     <div class="row mt-4">
@@ -91,7 +131,7 @@
                                     <tr>
                                         <td style="width:100%;">
                                             <!-- <img src="/l10n_gt_fe/static/src/img/logo_alimentari.png" style="width:210px;" /> -->
-                                            <img src="/web/binary/company_logo" style="width:200px;"/>
+                                            <img src="/web/binary/company_logo" style="width:200px;" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -101,7 +141,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <span t-esc="str(doc.company_id.street)+', '+str(doc.company_id.country_id.name)+', '+str(doc.company_id.country_id.name)"/>
+                                            <span t-esc="str(doc.company_id.street)+', '+str(doc.company_id.country_id.name)+', '+str(doc.company_id.country_id.name)" />
 
                                         </td>
                                     </tr>
@@ -130,12 +170,8 @@
                                             <thead>
                                                 <tr>
                                                     <th colspan="2" class="dte-th text-center">
-                                                        <t t-if="doc.move_type == 'out_refund'">
-                                                            <span>NOTA DE CRÉDITO</span>
-                                                        </t>
-                                                        <t t-else="">
-                                                            <span>FACTURA CAMBIARIA ELECTRÓNICA</span>
-                                                        </t>
+                                                            <span style="text-transform: uppercase;" t-field="doc.journal_id.fe_type"/>
+                                                            <span> ELECTRÓNICA</span>
                                                     </th>
                                                 </tr>
                                             </thead>

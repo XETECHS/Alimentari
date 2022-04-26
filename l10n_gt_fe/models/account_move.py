@@ -259,7 +259,8 @@ class AccountMove(models.Model):
                             tax_line.append(tax.id)
                             Impuesto = ET.SubElement(Impuestos, 'dte:Impuesto')
                             print("tax",tax)
-                            ET.SubElement(Impuesto, 'dte:NombreCorto').text = tax.description
+                            ET.SubElement(Impuesto, 'dte:NombreCorto').text = tax.description if tax.description else tax.tax_group_id.shortname
+                            print("tax.description",tax.description)
                             if not origin_faex:
                                 if self.fe_type == 'FAEX':
                                     ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "2"  
@@ -275,15 +276,17 @@ class AccountMove(models.Model):
                             if tax.tax_group_id.shortname =='BEBIDAS ALCOHOLICAS':
                                 print("Line", line.product_uom_id.factor)
                                 print("TAX_G", tax.tax_group_id.shortname)
-                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_unit, 2))
+                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_unit, 2) )
                                 ET.SubElement(Impuesto, 'dte:CantidadUnidadesGravables').text = str( round(line.quantity, 2))
-                                MontoImpuesto=(line.price_unit) * (tax.amount/100)
+                                MontoImpuesto=(line.quantity * line.price_unit) * (tax.amount/100)
                                 ET.SubElement(Impuesto, 'dte:MontoImpuesto').text =  str( round(MontoImpuesto, 2) )
                             elif tax.tax_group_id.shortname =='IVA':
                                 ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_total - line.price_tax, 2) )
                                 MontoImpuesto=(line.price_total - line.price_tax) * (tax.amount/100)
                                 ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str( round(MontoImpuesto, 2) )
-                            dte_total=round(line.price_total, 2)
+                dte_total=round(line.price_total, 2)
+                #El total debe aparecer una sóla vez
+                ET.SubElement(Item, 'dte:Total').text = str(dte_total)
 
             elif self.fe_type == 'FESP':
                 Impuestos = ET.SubElement(Item, 'dte:Impuestos')
@@ -316,8 +319,6 @@ class AccountMove(models.Model):
 
             count += 1
         
-        #El total debe aparecer una sóla vez
-        ET.SubElement(Item, 'dte:Total').text = str(dte_total)
         Totales = ET.SubElement(DatosEmision, 'dte:Totales')
         
         if self.fe_type != 'NABN':
