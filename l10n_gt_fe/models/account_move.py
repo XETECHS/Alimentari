@@ -51,23 +51,16 @@ class AccountMove(models.Model):
     def get_num2words(self, amount, lang='es'):
         words = num2words(amount, lang=lang, to='currency') 
         words = words.capitalize()
-        print("words",words)
         if 'céntimo'  in words:
             words = words.replace("euros", "Quetzales")
             result = words.replace("céntimo", "centavo")
-            print("if",result)
         elif 'centimos' in words:
             words=words.replace("euro","Quetzal")
             result=words.replace("centimos", "centavos")
-            print("elif",result)
         elif 'cents' in words:
             result = words.replace("euro", "dollars")
-            print("elif 2",result)
         else:
             result = words.replace("euros", " Quetzales Exactos")
-            print("else",result)
-
-        print("RESULT",result)
         return result
 
     def action_print_fel(self):
@@ -243,7 +236,6 @@ class AccountMove(models.Model):
             ET.SubElement(Item, 'dte:Descuento').text = str(round(line.price_discount, 2))
             
             if self.fe_type not in ['NABN', 'FESP']:
-                print("if self.fe_type not in ['NABN', 'FESP']")
                 Impuestos = ET.SubElement(Item, 'dte:Impuestos')
                 for tax in line.tax_ids:
                     
@@ -258,9 +250,7 @@ class AccountMove(models.Model):
                         if tax.id not in tax_line:
                             tax_line.append(tax.id)
                             Impuesto = ET.SubElement(Impuestos, 'dte:Impuesto')
-                            print("tax",tax)
                             ET.SubElement(Impuesto, 'dte:NombreCorto').text = tax.description if tax.description else tax.tax_group_id.shortname
-                            print("tax.description",tax.description)
                             if not origin_faex:
                                 if self.fe_type == 'FAEX':
                                     ET.SubElement(Impuesto, 'dte:CodigoUnidadGravable').text = "2"  
@@ -274,12 +264,11 @@ class AccountMove(models.Model):
                             # ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(self.amount_total - tax_amount_totals_final, 2) )
 
                             if tax.tax_group_id.shortname =='BEBIDAS ALCOHOLICAS':
-                                print("Line", line.product_uom_id.factor)
-                                print("TAX_G", tax.tax_group_id.shortname)
-                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_unit, 2) )
-                                ET.SubElement(Impuesto, 'dte:CantidadUnidadesGravables').text = str( round(line.quantity, 2))
-                                MontoImpuesto=(line.quantity * line.price_unit) * (tax.amount/100)
-                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text =  str( round(MontoImpuesto, 2) )
+                                ET.SubElement(Impuesto, 'dte:MontoGravable').text =   "{:.2f}".format(round(line.product_id.product_tmpl_id.precio_sugerido, 2)) #str( round(line.product_id.product_tmpl_id.precio_sugerido, 2) )
+                                ET.SubElement(Impuesto, 'dte:CantidadUnidadesGravables').text =  "{:.2f}".format(round(line.price_unit, 2)) # str( round(line.price_unit, 2))
+                                MontoImpuesto= line.price_total - (line.quantity * line.price_unit) #* (tax.amount/100)
+                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = "{:.2f}".format(round(MontoImpuesto, 2))  #str( round(MontoImpuesto, 2) )
+
                             elif tax.tax_group_id.shortname =='IVA':
                                 ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_total - line.price_tax, 2) )
                                 MontoImpuesto=(line.price_total - line.price_tax) * (tax.amount/100)
@@ -463,7 +452,6 @@ class AccountMove(models.Model):
         })
         response = requests.post(url=URL, json=payloads, headers=headers)
         data = response.json()
-        print(data)
         # if not data['resultado']:
         #     values.update( {'arch_xml': '', 'process_status': 'fail'})
         # else:
@@ -601,6 +589,11 @@ class AccountMoveLine(models.Model):
 
     price_tax = fields.Monetary(string='Subtotal', store=True, readonly=True)
     price_discount = fields.Monetary(string='Price Discount', store=True, readonly=True)
+
+    # precio_sugerido = fields.Float(string='Precio Sugerido', digits='Precio Sugerido')
+    # precio_sugerido = fields.Monetary(string='Precio Sugerido', store=True, readonly=True, currency_field='currency_id', default=1.0)
+
+
     #guide = fields.Char(string='Guide', size=12)
 
     @api.model
