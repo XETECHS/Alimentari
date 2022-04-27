@@ -103,7 +103,9 @@
                                 <tr>
                                     <td>FECHA DE VENCIMIENTO:</td>
                                     <td>
-                                        <span t-field="doc.invoice_date_due" />
+                                        <t t-foreach="doc.fe_payment_line_ids" t-as="line">
+                                            <span t-field="line.date" />
+                                        </t>
                                     </td>
                                 </tr>
                                 <tr>
@@ -122,7 +124,7 @@
                             </tbody>
                         </table>
                     </t>
-                    <t t-elif="doc.journal_id.fe_type == 'NCRE' ">
+                    <t t-elif="doc.journal_id.fe_type in ('NCRE','NDEB') ">
                         <table style="width:100%">
                             <tbody>
                                 <tr>
@@ -160,6 +162,11 @@
                                         <td style="width:100%;">
                                             <!-- <img src="/l10n_gt_fe/static/src/img/logo_alimentari.png" style="width:210px;" /> -->
                                             <img src="/web/binary/company_logo" style="width:200px;" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span>Alimentari</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -461,7 +468,9 @@
                                                         <tr>
                                                             <td style="width:10%"></td>
                                                             <td style="width:45%">
-                                                                <span t-esc="str(frase.name).upper()" />
+                                                                <t t-if="doc.journal_id.fe_type !='NCRE'">
+                                                                    <span t-esc="str(frase.name).upper()" />
+                                                                </t>
                                                             </td>
                                                             <td style="width:10%"></td>
                                                             <td style="width:10%"></td>

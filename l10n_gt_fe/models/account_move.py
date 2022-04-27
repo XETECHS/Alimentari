@@ -51,16 +51,21 @@ class AccountMove(models.Model):
     def get_num2words(self, amount, lang='es'):
         words = num2words(amount, lang=lang, to='currency') 
         words = words.capitalize()
+
         if 'céntimo'  in words:
             words = words.replace("euros", "Quetzales")
             result = words.replace("céntimo", "centavo")
+            print("if",words, result)
         elif 'centimos' in words:
-            words=words.replace("euro","Quetzal")
+            words=words.replace("euros","Quetzales")
             result=words.replace("centimos", "centavos")
+            print("elif",words, result)
         elif 'cents' in words:
             result = words.replace("euro", "dollars")
+            print("elif 2",words, result)
         else:
             result = words.replace("euros", " Quetzales Exactos")
+            print("else",words, result)
         return result
 
     def action_print_fel(self):
