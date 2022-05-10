@@ -44,7 +44,7 @@ TYPE_FE = [
     ('OTRO', 'Otro')
 ]
 
-
+#elif Un euro con cero centimos Un euro con cero centavos
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
@@ -55,17 +55,17 @@ class AccountMove(models.Model):
         if 'céntimo'  in words:
             words = words.replace("euros", "Quetzales")
             result = words.replace("céntimo", "centavo")
-            print("if",words, result)
+            # print("if",words, result)
         elif 'centimos' in words:
-            words=words.replace("euros","Quetzales")
+            words=words.replace("euro","Quetzales")
             result=words.replace("centimos", "centavos")
-            print("elif",words, result)
+            # print("elif",words, result)
         elif 'cents' in words:
             result = words.replace("euro", "dollars")
-            print("elif 2",words, result)
+            # print("elif 2",words, result)
         else:
             result = words.replace("euros", " Quetzales Exactos")
-            print("else",words, result)
+            # print("else",words, result)
         return result
 
     def action_print_fel(self):
