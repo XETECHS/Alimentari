@@ -282,9 +282,9 @@ class ReportSaleBook(models.AbstractModel):
                 'fecha': datetime.strptime(
                     str(inv.invoice_date),
                     DEFAULT_SERVER_DATE_FORMAT).strftime(date_format),
-                'tipo': tipo,
-                'serie': serie,
-                'numero': numero,
+                'tipo': inv.name,
+                'serie': inv.fe_serie,
+                'numero': inv.fe_number,
                 'nit_cliente': inv.partner_id.vat or "C/F",
                 'cliente': str(inv.partner_id.name).encode('ascii', 'ignore'),
                 'bienes_gravados': bien_local_gravado,
