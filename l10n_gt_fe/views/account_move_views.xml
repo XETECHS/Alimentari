@@ -25,13 +25,13 @@
                 <attribute name="domain">[('id', 'in', suitable_journal_ids), ('fe_establishment_id', '=', rel_establishment_user)]</attribute>
             </xpath>
             <field name="ref" position="after">
-                <field name="fe_type"  attrs="{'required': [('move_type', '!=', 'entry')], 'invisible': [('move_type', '=', 'entry')]}"/>
-                <field name="fe_phrase_ids" widget="many2many_tags"/>
-                <field name="fe_exhangerate" />
-                <field name="fe_uuid" />
-                <field name="fe_serie" />
-                <field name="fe_number" />
-                <field name="fe_certification_date" />
+                <field name="fe_type"  attrs="{'required': [('fe_type', '!=', False)], 'invisible': [('move_type', '=', 'in_invoice')]}"/>
+                <field name="fe_phrase_ids" widget="many2many_tags" attrs="{'invisible': [('move_type', '=', 'in_invoice')]}"/>
+                <field name="fe_exhangerate" attrs="{'invisible': [('move_type', '=', 'in_invoice')]}"/>
+                <field name="fe_uuid" attrs="{'invisible': [('move_type', '=', 'in_invoice')]}"/>
+                <field name="fe_serie" attrs="{'invisible': [('move_type', '=', 'in_invoice')]}"/>
+                <field name="fe_number" attrs="{'invisible': [('move_type', '=', 'in_invoice')]}"/>
+                <field name="fe_certification_date" attrs="{'invisible': [('move_type', '=', 'in_invoice')]}"/>
             </field>
             
 
@@ -45,7 +45,7 @@
             </xpath>
 
             <header position="inside">
-                <button name="send_invoice" type="object" class="oe_highlight" string="Certificar DTE" attrs="{'invisible': ['|', ('process_status', 'in', ['cancel', 'ok']), ('state', '!=', 'posted') ]}"/>
+                <button name="send_invoice" type="object" class="oe_highlight" string="Certificar DTE" attrs="{'invisible': ['|', ('process_status', 'in', ['cancel', 'ok']), ('state', '!=', 'posted'), ('move_type', '=', 'in_invoice') ]}"/>
             </header>
             
             <xpath expr="//notebook" position="inside">
