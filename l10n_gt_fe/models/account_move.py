@@ -275,9 +275,8 @@ class AccountMove(models.Model):
                                 ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = "{:.2f}".format(round(MontoImpuesto, 2))  #str( round(MontoImpuesto, 2) )
 
                             elif tax.tax_group_id.shortname =='IVA':
-                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_total - line.price_tax, 2) )
-                                MontoImpuesto=(line.price_total - line.price_tax) * (tax.amount/100)
-                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str( round(MontoImpuesto, 2) )
+                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str(line.price_subtotal)
+                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str(line.price_tax)
                 dte_total=round(line.price_total, 2)
                 #El total debe aparecer una sóla vez
                 ET.SubElement(Item, 'dte:Total').text = str(dte_total)
@@ -441,8 +440,11 @@ class AccountMove(models.Model):
         # ******************* ALTERNATIVA? ***************
 
 
-        final = ET.ElementTree(fe)
+        final = ET.ElementTree(fe)       
         final.write(f, encoding='UTF-8', xml_declaration=True)
+        #print(f.getvalue())
+        
+        # raise UserError(_('XML Generado'))
         return f.getvalue()
 
 
@@ -461,6 +463,7 @@ class AccountMove(models.Model):
         #     values.update( {'arch_xml': '', 'process_status': 'fail'})
         # else:
         #     values.update( {'arch_xml': data['archivo'], 'process_status': 'process'})
+
         return data['archivo']#self.write( values )
 
     def send_invoice(self):
