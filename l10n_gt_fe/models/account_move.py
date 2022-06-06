@@ -445,9 +445,9 @@ class AccountMove(models.Model):
 
         final = ET.ElementTree(fe)       
         final.write(f, encoding='UTF-8', xml_declaration=True)
-        print(f.getvalue())
+        # print(f.getvalue())
         
-        raise UserError(_('XML Generado'))
+        # raise UserError(_('XML Generado'))
         return f.getvalue()
 
 
