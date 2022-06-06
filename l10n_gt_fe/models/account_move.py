@@ -270,15 +270,18 @@ class AccountMove(models.Model):
 
                             if tax.tax_group_id.shortname =='BEBIDAS ALCOHOLICAS':
                                 ET.SubElement(Impuesto, 'dte:MontoGravable').text =   "{:.2f}".format(round(line.product_id.product_tmpl_id.precio_sugerido, 2)) #str( round(line.product_id.product_tmpl_id.precio_sugerido, 2) )
-                                ET.SubElement(Impuesto, 'dte:CantidadUnidadesGravables').text =  "{:.2f}".format(round(line.price_unit, 2)) # str( round(line.price_unit, 2))
+                                ET.SubElement(Impuesto, 'dte:CantidadUnidadesGravables').text =  "{:.2f}".format(round(line.quantity, 2)) # str( round(line.price_unit, 2))
                                 MontoImpuesto= line.price_total - (line.quantity * line.price_unit) #* (tax.amount/100)
                                 ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = "{:.2f}".format(round(MontoImpuesto, 2))  #str( round(MontoImpuesto, 2) )
 
                             elif tax.tax_group_id.shortname =='IVA':
-                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str(line.price_subtotal)
-                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str(line.price_tax)
+                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_total - line.price_tax, 2) )
+                                MontoImpuesto=(line.price_total - line.price_tax) * (tax.amount/100)
+                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str( round(MontoImpuesto, 2) )
+
                 dte_total=round(line.price_total, 2)
                 #El total debe aparecer una sóla vez
+                print("taxes: ",self.tax_totals_json)
                 ET.SubElement(Item, 'dte:Total').text = str(dte_total)
 
             elif self.fe_type == 'FESP':
@@ -442,9 +445,9 @@ class AccountMove(models.Model):
 
         final = ET.ElementTree(fe)       
         final.write(f, encoding='UTF-8', xml_declaration=True)
-        #print(f.getvalue())
+        print(f.getvalue())
         
-        # raise UserError(_('XML Generado'))
+        raise UserError(_('XML Generado'))
         return f.getvalue()
 
 
