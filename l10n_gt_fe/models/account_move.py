@@ -281,7 +281,7 @@ class AccountMove(models.Model):
 
                 dte_total=round(line.price_total, 2)
                 #El total debe aparecer una sóla vez
-                print("taxes: ",self.tax_totals_json)
+                # print("taxes: ",self.tax_totals_json)
                 ET.SubElement(Item, 'dte:Total').text = str(dte_total)
 
             elif self.fe_type == 'FESP':
@@ -445,7 +445,7 @@ class AccountMove(models.Model):
 
         final = ET.ElementTree(fe)       
         final.write(f, encoding='UTF-8', xml_declaration=True)
-        # print(f.getvalue())
+        print(f.getvalue())
         
         # raise UserError(_('XML Generado'))
         return f.getvalue()
