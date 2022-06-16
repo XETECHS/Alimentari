@@ -275,9 +275,8 @@ class AccountMove(models.Model):
                                 ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = "{:.2f}".format(round(MontoImpuesto, 2))  #str( round(MontoImpuesto, 2) )
 
                             elif tax.tax_group_id.shortname =='IVA':
-                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str( round(line.price_total - line.price_tax, 2) )
-                                MontoImpuesto=(line.price_total - line.price_tax) * (tax.amount/100)
-                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str( round(MontoImpuesto, 2) )
+                                ET.SubElement(Impuesto, 'dte:MontoGravable').text = str(line.price_subtotal)
+                                ET.SubElement(Impuesto, 'dte:MontoImpuesto').text = str(line.price_tax)
 
                 dte_total=round(line.price_total, 2)
                 #El total debe aparecer una sóla vez
