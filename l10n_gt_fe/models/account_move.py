@@ -49,24 +49,28 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     def get_num2words(self, amount, lang='es'):
-        words = num2words(amount, lang=lang, to='currency') 
-        words = words.capitalize()
+        # words = num2words(amount, lang=lang, to='currency')
+        # words = words.capitalize()
+        #
+        # if 'céntimo'  in words:
+        #     words = words.replace("euros", "Quetzales")
+        #     result = words.replace("céntimo", "centavo")
+        #     # print("if",words, result)
+        # elif 'centimos' in words:
+        #     words=words.replace("euro","Quetzales")
+        #     result=words.replace("centimos", "centavos")
+        #     # print("elif",words, result)
+        # elif 'cents' in words:
+        #     result = words.replace("euro", "dollars")
+        #     # print("elif 2",words, result)
+        # else:
+        #     result = words.replace("euros", " Quetzales Exactos")
+        #     # print("else",words, result)
+        # return result
 
-        if 'céntimo'  in words:
-            words = words.replace("euros", "Quetzales")
-            result = words.replace("céntimo", "centavo")
-            # print("if",words, result)
-        elif 'centimos' in words:
-            words=words.replace("euro","Quetzales")
-            result=words.replace("centimos", "centavos")
-            # print("elif",words, result)
-        elif 'cents' in words:
-            result = words.replace("euro", "dollars")
-            # print("elif 2",words, result)
-        else:
-            result = words.replace("euros", " Quetzales Exactos")
-            # print("else",words, result)
-        return result
+        words = self.currency_id.amount_currency_to_text(amount, 2)
+        words = words.capitalize()
+        return words
 
     def action_print_fel(self):
         return self.env.ref('l10n_gt_fe.invoice_fel_templates').report_action(self)

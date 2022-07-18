@@ -8,3 +8,4 @@ from . import account_move
 from . import account_journal
 from . import charge_third_party_account
 from . import product_template
+from . import res_currency
