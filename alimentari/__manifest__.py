@@ -32,7 +32,9 @@
         'views/product_template_view_inherit.xml',
         'views/account_move_view_inherit.xml',
         'views/purchase_order_view_inherit.xml',    
-        'views/stock_picking_view_inherit.xml',  
+        'views/stock_picking_view_inherit.xml',
+        'views/product_category_form.xml',
+        'views/account_invoice_alcochol_inherit.xml',
         
     ],
     # only loaded in demonstration mode

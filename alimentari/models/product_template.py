@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from dbm.ndbm import library
-from itertools import groupby
-from datetime import datetime, timedelta
-from math import prod
+
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
